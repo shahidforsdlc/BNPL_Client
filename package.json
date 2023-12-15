@@ -1,28 +1,47 @@
 {
-  "name": "bnpl-client",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "@paypal/react-paypal-js": "^8.1.3",
-    "@stripe/react-stripe-js": "^2.3.1",
-    "@stripe/stripe-js": "^2.1.11",
-    "@testing-library/jest-dom": "^5.17.0",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
-    "axios": "^1.6.0",
-    "paypal-stripe-checkout": "^1.0.5",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-scripts": "5.0.1",
-    "react-toastify": "^9.1.3",
-    "super-lemon": "^1.0.0",
-    "web-vitals": "^2.1.4"
-  },
+  "name": "bnpl-wipeon",
+  "version": "1.1.4",
+  "description": "",
+  "main": "dist/index.js",
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "webpack",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
+  },
+  "author": "shahid",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.7.5",
+    "@babel/preset-env": "^7.7.6",
+    "@babel/preset-react": "^7.7.4",
+    "babel-loader": "^8.0.6",
+    "css-loader": "^3.3.0",
+    "style-loader": "^1.0.1",
+    "tailwindcss": "^3.3.2"
+  },
+  "peerDependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "dependencies": {
+    "@heroicons/react": "^2.0.18",
+    "bnpl-wipeon": "^1.1.4",
+    "country-state-city": "^3.2.1",
+    "libphonenumber-js": "^1.10.51",
+    "moment": "^2.29.4",
+    "react": "^18.2.0",
+    "react-datepicker": "^4.24.0",
+    "react-dom": "^18.2.0",
+    "react-icons": "^4.12.0",
+    "react-phone-input-2": "^2.15.1",
+    "react-router": "^6.11.2",
+    "react-router-dom": "^5.3.3",
+    "react-scripts": "5.0.1",
+    "react-toastify": "^9.1.3",
+    "web-vitals": "^3.5.0",
+    "webpack": "^5.89.0",
+    "webpack-cli": "^5.1.4"
   },
   "eslintConfig": {
     "extends": [
@@ -41,8 +60,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "tailwindcss": "^3.3.5"
   }
 }
