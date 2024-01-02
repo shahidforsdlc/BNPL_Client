@@ -31,7 +31,7 @@ const StatePicker = (props) => {
         for="floating_outlined"
         className=" text-[15px] font-semibold text-black "
       >
-        {props.label}  {!props.optional?<span className="text-red">*</span>:null} 
+        {props.label}  {!props.optional?<span className="text-red-500">*</span>:null} 
       </label>
       <select
         disabled={props.disabled}

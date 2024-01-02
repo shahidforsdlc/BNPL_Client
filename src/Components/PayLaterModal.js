@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { CiCircleRemove } from "react-icons/ci";
 import Stepper from "./Stepper";
 import DurationBar from "./Durationbar";
@@ -14,19 +14,20 @@ import parsePhoneNumber from "libphonenumber-js";
 import CityPicker from "./Input/CityPicker";
 import StatePicker from "./Input/StatePicker";
 import CountryPicker from "./Input/CountryPicker";
-
+import { FcGoogle } from "react-icons/fc";
 
 function PayLaterModal(prop) {
   const { closeModal } = prop;
   const [current, setCurrent] = useState(1);
   const [selectedDuration, setSelectedDuration] = useState(3);
-  const [loading , setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
   var nonumber = /\d+/;
   var numberReg = /^[0-9]*$/;
   var nospecial = /[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
   const init = {
     firstName: "",
     lastName: "",
+    fullName: "",
     dob: "",
     country: "",
     iso: "",
@@ -41,9 +42,9 @@ function PayLaterModal(prop) {
     state: "",
     countryCode: "",
     mobile: "",
-    expirationDate:"",
-    cardNumber:"",
-    cvv:""
+    expirationDate: "",
+    cardNumber: "",
+    cvv: "",
   };
 
   const [fields, setFeilds] = useState(init);
@@ -59,9 +60,7 @@ function PayLaterModal(prop) {
     console.log("label------", lbltext, fields[e.target.id]);
 
     if (e.target.value.toString().trim().length == 0) {
-      if (
-        e.target.id != "address2"
-      ) {
+      if (e.target.id != "address2") {
         newErrors[e.target.id] = `Invalid ${lbltext}`;
       }
     } else {
@@ -78,7 +77,7 @@ function PayLaterModal(prop) {
       }
     }
 
-    if (e.target.id == "firstName" || e.target.id == "lastName") {
+    if (e.target.id === "firstName" || e.target.id === "lastName" || e.target.id === "fullName") {
       if (
         e.target.value.trim().length == 0 ||
         nonumber.test(e.target.value.trim()) ||
@@ -90,6 +89,8 @@ function PayLaterModal(prop) {
       }
     }
 
+    
+
     if (e.target.id == "mobile") {
       if (numberReg.test(e.target.value) == false) {
         newErrors[e.target.id] = "Can only accept Numbers";
@@ -97,7 +98,6 @@ function PayLaterModal(prop) {
         newErrors[e.target.id] = "";
       }
     }
-   
 
     //For country selection
     if (e.target.id == "country") {
@@ -216,17 +216,16 @@ function PayLaterModal(prop) {
 
   //resposnsive
 
-
-  const proceedToEligibility =()=>{
-    setLoading(true)
-    setCurrent(2)
-    setLoading(false)
-  }
-  const proceedToPayment =()=>{
-    setLoading(true)
-    setCurrent(3)
-    setLoading(false)
-  }
+  const proceedToEligibility = () => {
+    setLoading(true);
+    setCurrent(2);
+    setLoading(false);
+  };
+  const proceedToPayment = () => {
+    setLoading(true);
+    setCurrent(3);
+    setLoading(false);
+  };
   return (
     <>
       <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed   inset-0 z-50 outline-none focus:outline-none">
@@ -258,36 +257,46 @@ function PayLaterModal(prop) {
 
                 <Stepper height={100} width={640} current={current} />
 
-                {current === 1 ?<div className="w-full bg-[#ebf1ff] border rounded-md   space-y-4  mt-4 ">
-                  <div className="flex justify-center items-center underline-offset-2 text-lg font-bold text-[#1700e2]">
-                    Choose your tenure
-                  </div>
-                  <DurationBar
-                    selectedDuration={selectedDuration}
-                    setSelectedDuration={setSelectedDuration}
-                  />
-                  <div className="w-full px-6 py-4 flex justify-between">
-                    <div className="flex flex-col text-xs items-center">
-                      <p className="font-bold">Monthly Payments</p>
-                      <p className="font-normal text-base">${(prop.amount / selectedDuration).toFixed(2)}</p>
+                {current === 1 ? (
+                  <div className="w-full bg-[#ebf1ff] border rounded-md   space-y-4  mt-4 ">
+                    <div className="flex justify-center items-center underline-offset-2 text-lg font-bold text-[#1700e2]">
+                      Choose your tenure
                     </div>
-                    <div className="flex flex-col text-xs items-center">
-                      <p className="font-bold">Total Payable</p>
-                      <p className="font-normal text-base">${prop.amount}</p>
+                    <DurationBar
+                      selectedDuration={selectedDuration}
+                      setSelectedDuration={setSelectedDuration}
+                    />
+                    <div className="w-full px-6 py-4 flex justify-between">
+                      <div className="flex flex-col text-xs items-center">
+                        <p className="font-bold">Monthly Payments</p>
+                        <p className="font-normal text-base">
+                          ${(prop.amount / selectedDuration).toFixed(2)}
+                        </p>
+                      </div>
+                      <div className="flex flex-col text-xs items-center">
+                        <p className="font-bold">Total Payable</p>
+                        <p className="font-normal text-base">${prop.amount}</p>
+                      </div>
                     </div>
-                  </div>
 
-                  <div className="flex justify-center items-center py-5">
-                  <Button onClick={()=>proceedToEligibility()} loading={loading} title="Proceed" className="w-[160px]"/>
+                    <div className="flex justify-center items-center py-5">
+                      <Button
+                        onClick={() => proceedToEligibility()}
+                        loading={loading}
+                        title="Proceed"
+                        className="w-[160px]"
+                      />
+                    </div>
                   </div>
-                </div>:null}
-                
-                {current === 2 ?<div className="w-full border rounded-md p-5  space-y-4  mt-4 ">
-                  <div className="flex justify-center items-center underline-offset-2 text-lg font-bold text-[#1700e2]">
-                    Your Personal Information
-                  </div>
-                  
-                  <div className="grid xs:grid-cols-2 sm:gap-4 mt-4 gap-y-2  lg:mx-0 xl:grid-cols-3">
+                ) : null}
+
+                {current === 2 ? (
+                  <div className="w-full border rounded-md p-5  space-y-4  mt-4 ">
+                    <div className="flex justify-center items-center underline-offset-2 text-lg font-bold text-[#1700e2]">
+                      Your Personal Information
+                    </div>
+
+                    <div className="grid xs:grid-cols-2 sm:gap-4 mt-4 gap-y-2  lg:mx-0 xl:grid-cols-3">
                       {/* First Name */}
                       <div className="h-[80px] w-full">
                         <div className="flex flex-col">
@@ -382,8 +391,7 @@ function PayLaterModal(prop) {
                             <label
                               id={`lblmobile`}
                               for={"mobile"}
-                              className=" text-txt font-semibold text-black "
-                            >
+                              className=" text-txt font-semibold text-black ">
                               Mobile Number
                             </label>
 
@@ -483,293 +491,520 @@ function PayLaterModal(prop) {
                         ) : null}
                       </div>
                     </div>
-                  <div className="flex justify-center items-center underline-offset-2 text-lg font-bold text-[#1700e2]">
-                    Your Address Details
-                  </div>
-                  
-                  
-
-                <div className="grid xs:grid-cols-2 sm:gap-4 mt-4 gap-y-2  lg:mx-0 xl:grid-cols-3">
-                  <div className="flex flex-col h-[80px] mb-2 w-full">
-                    <CountryPicker
-                      id={"country"}
-                      placeholder="Select Country Name"
-                      label="Country"
-                      error={errors["country"].length > 0 ? true : false}
-                      value={fields["country"]}
-                      onChange={(e) => {
-                        onChange(e);
-                      }}
-                    />
-
-                    {errors["country"].length > 0 ? (
-                      <p className="text-[#fa1c07] text-sm">
-                        {errors["country"]}
-                      </p>
-                    ) : null}
-                  </div>
-
-                  {/* Post Code */}
-                  <div className="h-[80px] w-full">
-                    <div className="flex flex-col">
-                      <Input
-                        id={"postCode"}
-                        label="Post Code"
-                        error={errors["postCode"].length > 0 ? true : false}
-                        value={fields["postCode"]}
-                        onChange={(e) => {
-                          onChange(e);
-                        }}
-                      />
+                    <div className="flex justify-center items-center underline-offset-2 text-lg font-bold text-[#1700e2]">
+                      Your Address Details
                     </div>
-                    {errors["postCode"].length > 0 ? (
-                      <div className="text-[#fa1c07] text-sm">
-                        {errors["postCode"]}
-                      </div>
-                    ) : null}
-                  </div>
 
-                  {/* Flat number */}
-                  <div className="h-[80px] w-full">
-                    <div className="flex flex-col">
-                      <Input
-                        id={"flat"}
-                        label="Flat Number"
-                        error={errors["flat"].length > 0 ? true : false}
-                        value={fields["flat"]}
-                        onChange={(e) => {
-                          onChange(e);
-                        }}
-                      />
-                    </div>
-                    {errors["flat"].length > 0 ? (
-                      <div className="text-[#fa1c07] text-sm">
-                        {errors["flat"]}
-                      </div>
-                    ) : null}
-                  </div>
+                    <div className="grid xs:grid-cols-2 sm:gap-4 mt-4 gap-y-2  lg:mx-0 xl:grid-cols-3">
+                      <div className="flex flex-col h-[80px] mb-2 w-full">
+                        <CountryPicker
+                          id={"country"}
+                          placeholder="Select Country Name"
+                          label="Country"
+                          error={errors["country"].length > 0 ? true : false}
+                          value={fields["country"]}
+                          onChange={(e) => {
+                            onChange(e);
+                          }}
+                        />
 
-                  {/* House Number and mname*/}
-                  <div className="h-[80px] w-full">
-                    <div className="flex flex-col">
-                      <Input
-                        id={"house"}
-                        label="House No.#/Name"
-                        placeholder="House No/ Name"
-                        error={errors["house"].length > 0 ? true : false}
-                        value={fields["house"]}
-                        onChange={(e) => {
-                          onChange(e);
-                        }}
-                      />
-                    </div>
-                    {errors["house"].length > 0 ? (
-                      <div className="text-[#fa1c07] text-sm">
-                        {errors["house"]}
+                        {errors["country"].length > 0 ? (
+                          <p className="text-[#fa1c07] text-sm">
+                            {errors["country"]}
+                          </p>
+                        ) : null}
                       </div>
-                    ) : null}
-                  </div>
 
-                  {/* Address 1*/}
-                  <div className="h-[80px] w-full">
-                    <div className="flex flex-col">
-                      <Input
-                        id={"address1"}
-                        label="Address Line 1"
-                        error={errors["address1"].length > 0 ? true : false}
-                        value={fields["address1"]}
-                        onChange={(e) => {
-                          onChange(e);
-                        }}
-                      />
-                    </div>
-                    {errors["address1"].length > 0 ? (
-                      <div className="text-[#fa1c07] text-sm">
-                        {errors["address1"]}
-                      </div>
-                    ) : null}
-                  </div>
-
-                  {/* Address 2*/}
-                  <div className="h-[80px] w-full">
-                    <div className="flex flex-col">
-                      <Input
-                        id={"address2"}
-                        label="Address Line 2"
-                        optional={true}
-                        error={errors["address2"].length > 0 ? true : false}
-                        value={fields["address2"]}
-                        onChange={(e) => {
-                          onChange(e);
-                        }}
-                      />
-                    </div>
-                    {errors["address2"].length > 0 ? (
-                      <div className="text-[#fa1c07] text-sm">
-                        {errors["address2"]}
-                      </div>
-                    ) : null}
-                  </div>
-
-                  {fields["country"] != "United Kingdom" ? (
-                    <div className="h-[80px] w-full">
-                      <div className="flex flex-col space-y-1">
-                        {states.length > 0 ? (
-                          <StatePicker
-                            label="State"
-                            onChange={onChange}
-                            placeholder="Enter State"
-                            name="state"
-                            error={errors["state"].length > 0 ? true : false}
-                            id="state"
-                            country={fields["country"]}
-                            value={fields["state"]}
-                          />
-                        ) : (
+                      {/* Post Code */}
+                      <div className="h-[80px] w-full">
+                        <div className="flex flex-col">
                           <Input
-                            label="State"
-                            onChange={onChange}
-                            placeholder="Enter State"
-                            name="state"
-                            error={errors["state"].length > 0 ? true : false}
-                            id="state"
-                            country={fields["country"]}
-                            value={fields["state"]}
+                            id={"postCode"}
+                            label="Post Code"
+                            error={errors["postCode"].length > 0 ? true : false}
+                            value={fields["postCode"]}
+                            onChange={(e) => {
+                              onChange(e);
+                            }}
                           />
-                        )}
+                        </div>
+                        {errors["postCode"].length > 0 ? (
+                          <div className="text-[#fa1c07] text-sm">
+                            {errors["postCode"]}
+                          </div>
+                        ) : null}
                       </div>
-                      {errors["state"].length > 0 ? (
-                        <div className="text-[#fa1c07] text-sm">
-                          {errors["state"]}
+
+                      {/* Flat number */}
+                      <div className="h-[80px] w-full">
+                        <div className="flex flex-col">
+                          <Input
+                            id={"flat"}
+                            label="Flat Number"
+                            error={errors["flat"].length > 0 ? true : false}
+                            value={fields["flat"]}
+                            onChange={(e) => {
+                              onChange(e);
+                            }}
+                          />
+                        </div>
+                        {errors["flat"].length > 0 ? (
+                          <div className="text-[#fa1c07] text-sm">
+                            {errors["flat"]}
+                          </div>
+                        ) : null}
+                      </div>
+
+                      {/* House Number and mname*/}
+                      <div className="h-[80px] w-full">
+                        <div className="flex flex-col">
+                          <Input
+                            id={"house"}
+                            label="House No.#/Name"
+                            placeholder="House No/ Name"
+                            error={errors["house"].length > 0 ? true : false}
+                            value={fields["house"]}
+                            onChange={(e) => {
+                              onChange(e);
+                            }}
+                          />
+                        </div>
+                        {errors["house"].length > 0 ? (
+                          <div className="text-[#fa1c07] text-sm">
+                            {errors["house"]}
+                          </div>
+                        ) : null}
+                      </div>
+
+                      {/* Address 1*/}
+                      <div className="h-[80px] w-full">
+                        <div className="flex flex-col">
+                          <Input
+                            id={"address1"}
+                            label="Address Line 1"
+                            error={errors["address1"].length > 0 ? true : false}
+                            value={fields["address1"]}
+                            onChange={(e) => {
+                              onChange(e);
+                            }}
+                          />
+                        </div>
+                        {errors["address1"].length > 0 ? (
+                          <div className="text-[#fa1c07] text-sm">
+                            {errors["address1"]}
+                          </div>
+                        ) : null}
+                      </div>
+
+                      {/* Address 2*/}
+                      <div className="h-[80px] w-full">
+                        <div className="flex flex-col">
+                          <Input
+                            id={"address2"}
+                            label="Address Line 2"
+                            optional={true}
+                            error={errors["address2"].length > 0 ? true : false}
+                            value={fields["address2"]}
+                            onChange={(e) => {
+                              onChange(e);
+                            }}
+                          />
+                        </div>
+                        {errors["address2"].length > 0 ? (
+                          <div className="text-[#fa1c07] text-sm">
+                            {errors["address2"]}
+                          </div>
+                        ) : null}
+                      </div>
+
+                      {fields["country"] != "United Kingdom" ? (
+                        <div className="h-[80px] w-full">
+                          <div className="flex flex-col space-y-1">
+                            {states.length > 0 ? (
+                              <StatePicker
+                                label="State"
+                                onChange={onChange}
+                                placeholder="Enter State"
+                                name="state"
+                                error={
+                                  errors["state"].length > 0 ? true : false
+                                }
+                                id="state"
+                                country={fields["country"]}
+                                value={fields["state"]}
+                              />
+                            ) : (
+                              <Input
+                                label="State"
+                                onChange={onChange}
+                                placeholder="Enter State"
+                                name="state"
+                                error={
+                                  errors["state"].length > 0 ? true : false
+                                }
+                                id="state"
+                                country={fields["country"]}
+                                value={fields["state"]}
+                              />
+                            )}
+                          </div>
+                          {errors["state"].length > 0 ? (
+                            <div className="text-[#fa1c07] text-sm">
+                              {errors["state"]}
+                            </div>
+                          ) : null}
                         </div>
                       ) : null}
-                    </div>
-                  ) : null}
 
-                  <div className="h-[80px] w-full">
-                    <div className="flex flex-col space-y-1">
-                      {cities.length > 0 &&
-                      fields["country"] != "United States" &&
-                      fields["country"] != "United Kingdom" ? (
-                        <CityPicker
-                          label="City"
-                          onChange={onChange}
-                          placeholder="Enter City"
-                          name="city"
-                          id="city"
-                          error={errors["city"].length > 0 ? true : false}
-                          state={fields["state"]}
-                          country={fields["country"]}
-                          value={fields["city"]}
-                        />
-                      ) : (
-                        <Input
-                          label="City/County"
-                          onChange={onChange}
-                          placeholder="City"
-                          name="city"
-                          id="city"
-                          error={errors["city"].length > 0 ? true : false}
-                          state={fields["state"]}
-                          country={fields["country"]}
-                          value={fields["city"]}
-                        />
-                      )}
-                    </div>
-                    {errors["city"].length > 0 ? (
-                      <div className="text-[#fa1c07] text-sm">
-                        {errors["city"]}
+                      <div className="h-[80px] w-full">
+                        <div className="flex flex-col space-y-1">
+                          {cities.length > 0 &&
+                          fields["country"] != "United States" &&
+                          fields["country"] != "United Kingdom" ? (
+                            <CityPicker
+                              label="City"
+                              onChange={onChange}
+                              placeholder="Enter City"
+                              name="city"
+                              id="city"
+                              error={errors["city"].length > 0 ? true : false}
+                              state={fields["state"]}
+                              country={fields["country"]}
+                              value={fields["city"]}
+                            />
+                          ) : (
+                            <Input
+                              label="City/County"
+                              onChange={onChange}
+                              placeholder="City"
+                              name="city"
+                              id="city"
+                              error={errors["city"].length > 0 ? true : false}
+                              state={fields["state"]}
+                              country={fields["country"]}
+                              value={fields["city"]}
+                            />
+                          )}
+                        </div>
+                        {errors["city"].length > 0 ? (
+                          <div className="text-[#fa1c07] text-sm">
+                            {errors["city"]}
+                          </div>
+                        ) : null}
                       </div>
-                    ) : null}
-                  </div>
-                </div>
+                    </div>
 
-                <div className="flex justify-center items-center underline-offset-2 text-lg font-bold text-[#1700e2]">
-                    Credit Card / Debit Card
+                    <div className="flex justify-center items-center underline-offset-2 text-lg font-bold text-[#1700e2]">
+                      Credit Card / Debit Card
+                    </div>
+                    <div className="grid xs:grid-cols-2 sm:gap-4 mt-4 gap-y-2  lg:mx-0 xl:grid-cols-3">
+                      <div className="h-[80px] w-full">
+                        <div className="flex flex-col">
+                          <Input
+                            type="date"
+                            label={"Expiration Date"}
+                            cardLayout={true}
+                            maxLength={"4"}
+                            id={"expirationDate"}
+                            value={fields["expirationDate"]}
+                            onChange={(e) => {
+                              onChange(e);
+                            }}
+                            placeholder="Expiration Date(MMYY)"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="h-[80px] w-full">
+                        <div className="flex flex-col">
+                          <Input
+                            cardLayout={true}
+                            maxLength={"16"}
+                            label={"Card Number"}
+                            id={"cardNumber"}
+                            value={fields["cardNumber"]}
+                            error={
+                              errors["cardNumber"] &&
+                              errors["cardNumber"].length > 0
+                                ? true
+                                : false
+                            }
+                            onChange={(e) => {
+                              onChange(e);
+                            }}
+                            placeholder="Card Number"
+                          />
+                          {errors["cardNumber"] &&
+                          errors["cardNumber"].length > 0 ? (
+                            <div className="text-[#fa1c07] text-sm">
+                              {errors["cardNumber"]}
+                            </div>
+                          ) : null}
+                        </div>
+                      </div>
+
+                      <div className="h-[80px] w-full">
+                        <div className="flex flex-col">
+                          <Input
+                            cardLayout={true}
+                            label={"CVV"}
+                            maxLength={"3"}
+                            id={"cvv"}
+                            value={fields["cvv"]}
+                            error={
+                              errors["cvv"] && errors["cvv"].length > 0
+                                ? true
+                                : false
+                            }
+                            onChange={(e) => {
+                              onChange(e);
+                            }}
+                            placeholder="CVV"
+                          />
+                          {errors["cvv"] && errors["cvv"].length > 0 ? (
+                            <div className="text-[#fa1c07] text-sm">
+                              {errors["cvv"]}
+                            </div>
+                          ) : null}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex justify-center items-center gap-5 py-5">
+                      <Button
+                        onClick={() => setCurrent(1)}
+                        loading={loading}
+                        title="Prev"
+                        type={"prev"}
+                        className="w-[130px]"
+                      />
+                      <Button
+                        onClick={() => proceedToPayment()}
+                        loading={loading}
+                        title="Next"
+                        type={"next"}
+                        className="w-[130px]"
+                      />
+                    </div>
                   </div>
-                  <div className="grid xs:grid-cols-2 sm:gap-4 mt-4 gap-y-2  lg:mx-0 xl:grid-cols-3">
+                ) : null}
+                {current === 3 ? (
+                  <div className="w-full border rounded-md p-5  space-y-4  mt-4 ">
+                    <div className="w-full flex justify-center items-center">
+                    <div className="flex flex-row w-[60%] justify-center gap-1 bg-black p-2 border rounded-md items-center  text-lg font-bold ">
+                      <FcGoogle className="text-red-500 " />
+                      <p className="text-white">Pay</p>
+                    </div>
+                    </div>
+                    <div className="flex justify-center ga-2 items-center">
+                      <div className="border w-1/3 "/>
+                      <div className="">Or Pay Using</div>
+                      <div className="border  w-1/3 "/>
+                    </div>
                   
-                  <div className="h-[80px] w-full">
-                    <div className="flex flex-col">
+
+                   
+                    <div className="grid xs:grid-cols-1 sm:gap-1 mt-4 gap-y-0  lg:mx-0 lg:grid-cols-2">
+                    <div className="h-[80px] w-full">
+                        <div className="flex flex-col">
+                          <Input
+                            cardLayout={true}
+                            maxLength={"16"}
+                            label={"Card Number"}
+                            id={"cardNumber"}
+                            value={fields["cardNumber"]}
+                            error={
+                              errors["cardNumber"] &&
+                              errors["cardNumber"].length > 0
+                                ? true
+                                : false
+                            }
+                            onChange={(e) => {
+                              onChange(e);
+                            }}
+                            placeholder="Card Number"
+                          />
+                          {errors["cardNumber"] &&
+                          errors["cardNumber"].length > 0 ? (
+                            <div className="text-[#fa1c07] text-sm">
+                              {errors["cardNumber"]}
+                            </div>
+                          ) : null}
+                        </div>
+                      </div>
+                      <div className="h-[80px] w-full">
+                        <div className="flex flex-col">
+                          <Input
+                            type="date"
+                            label={"Expiration Date"}
+                            cardLayout={true}
+                            maxLength={"4"}
+                            id={"expirationDate"}
+                            value={fields["expirationDate"]}
+                            onChange={(e) => {
+                              onChange(e);
+                            }}
+                            placeholder="Expiration Date(MMYY)"
+                          />
+                        </div>
+                      </div>
 
                      
-                        <Input
-                          type="date"
-                          label={"Expiration Date"}
-                          cardLayout={true}
-                          maxLength={"4"}
-                          id={"expirationDate"}
-                          value={fields["expirationDate"]}
-                          onChange={(e) => {
-                            onChange(e);
-                          }}
-                          placeholder="Expiration Date(MMYY)"
-                        />
-                      </div>
-                    </div>
 
+                      <div className="h-[80px] w-full">
+                        <div className="flex flex-col">
+                          <Input
+                            cardLayout={true}
+                            label={"CVV"}
+                            maxLength={"3"}
+                            id={"cvv"}
+                            value={fields["cvv"]}
+                            error={
+                              errors["cvv"] && errors["cvv"].length > 0
+                                ? true
+                                : false
+                            }
+                            onChange={(e) => {
+                              onChange(e);
+                            }}
+                            placeholder="CVV"
+                          />
+                          {errors["cvv"] && errors["cvv"].length > 0 ? (
+                            <div className="text-[#fa1c07] text-sm">
+                              {errors["cvv"]}
+                            </div>
+                          ) : null}
+                        </div>
+                      </div>
+
+                    </div>
+                    <div className="grid xs:grid-cols-1 sm:gap-1 mt-4 gap-y-0  lg:mx-0 ">
                     <div className="h-[80px] w-full">
-                    <div className="flex flex-col">
-                        <Input
-                          cardLayout={true}
-                          maxLength={"16"}
-                          label={"Card Number"}
-                          id={"cardNumber"}
-                          value={fields["cardNumber"]}
-                          error={
-                            errors["cardNumber"] &&
-                            errors["cardNumber"].length > 0
-                              ? true
-                              : false
-                          }
-                          onChange={(e) => {
-                           onChange(e);
-                          }}
-                          placeholder="Card Number"
-                        />
-                        {errors["cardNumber"] &&
-                        errors["cardNumber"].length > 0 ? (
+                        <div className="flex flex-col">
+                          <Input
+                            id={"fullName"}
+                            label="Full Name"
+                            error={
+                              errors["fullName"].length > 0 ? true : false
+                            }
+                            placeholder="Full Name"
+                            value={fields["fullName"]}
+                            onChange={(e) => {
+                              onChange(e);
+                            }}
+                          />
+                        </div>
+                        {errors["fullName"].length > 0 ? (
                           <div className="text-[#fa1c07] text-sm">
-                            {errors["cardNumber"]}
+                            {errors["fullName"]}
                           </div>
                         ) : null}
                       </div>
-                    </div>
-
-                    <div className="h-[80px] w-full">
-                    <div className="flex flex-col">
-                        <Input
-                          cardLayout={true}
-                          label={"CVV"}
-                          maxLength={"3"}
-                          id={"cvv"}
-                          value={fields["cvv"]}
-                          error={
-                            errors["cvv"] && errors["cvv"].length > 0
-                              ? true
-                              : false
-                          }
+                      <div className="flex flex-col h-[80px] mb-2 w-full">
+                        <CountryPicker
+                          id={"country"}
+                          placeholder="Select Country Name"
+                          label="Country"
+                          error={errors["country"].length > 0 ? true : false}
+                          value={fields["country"]}
                           onChange={(e) => {
                             onChange(e);
                           }}
-                          placeholder="CVV"
                         />
-                        {errors["cvv"] && errors["cvv"].length > 0 ? (
+
+                        {errors["country"].length > 0 ? (
+                          <p className="text-[#fa1c07] text-sm">
+                            {errors["country"]}
+                          </p>
+                        ) : null}
+                      </div>
+                      {fields["country"] != "United Kingdom" ? (
+                        <div className="h-[80px] w-full">
+                          <div className="flex flex-col space-y-1">
+                            {states.length > 0 ? (
+                              <StatePicker
+                                label="State"
+                                onChange={onChange}
+                                placeholder="Enter State"
+                                name="state"
+                                error={
+                                  errors["state"].length > 0 ? true : false
+                                }
+                                id="state"
+                                country={fields["country"]}
+                                value={fields["state"]}
+                              />
+                            ) : (
+                              <Input
+                                label="State"
+                                onChange={onChange}
+                                placeholder="Enter State"
+                                name="state"
+                                error={
+                                  errors["state"].length > 0 ? true : false
+                                }
+                                id="state"
+                                country={fields["country"]}
+                                value={fields["state"]}
+                              />
+                            )}
+                          </div>
+                          {errors["state"].length > 0 ? (
+                            <div className="text-[#fa1c07] text-sm">
+                              {errors["state"]}
+                            </div>
+                          ) : null}
+                        </div>
+                      ) : null}
+
+                      <div className="h-[80px] w-full">
+                        <div className="flex flex-col space-y-1">
+                          {cities.length > 0 &&
+                          fields["country"] != "United States" &&
+                          fields["country"] != "United Kingdom" ? (
+                            <CityPicker
+                              label="City"
+                              onChange={onChange}
+                              placeholder="Enter City"
+                              name="city"
+                              id="city"
+                              error={errors["city"].length > 0 ? true : false}
+                              state={fields["state"]}
+                              country={fields["country"]}
+                              value={fields["city"]}
+                            />
+                          ) : (
+                            <Input
+                              label="City/County"
+                              onChange={onChange}
+                              placeholder="City"
+                              name="city"
+                              id="city"
+                              error={errors["city"].length > 0 ? true : false}
+                              state={fields["state"]}
+                              country={fields["country"]}
+                              value={fields["city"]}
+                            />
+                          )}
+                        </div>
+                        {errors["city"].length > 0 ? (
                           <div className="text-[#fa1c07] text-sm">
-                            {errors["cvv"]}
+                            {errors["city"]}
                           </div>
                         ) : null}
                       </div>
+                      </div>
+                    <div className="flex justify-center items-center gap-5 py-5">
+                      <Button
+                        onClick={() => setCurrent(1)}
+                        loading={loading}
+                        title={`Pay $${prop?.amount}`}
+                        className="w-[125px]"
+                      />
+                      
                     </div>
-                    </div>
-                    
-                  
-
-                  <div className="flex justify-center items-center gap-5 py-5">
-                  <Button onClick={()=>setCurrent(1)} loading={loading} title="Prev" type={"prev"} className="w-[130px]"/>
-                  <Button onClick={()=>proceedToPayment()} loading={loading} title="Next" type={"next"} className="w-[130px]"/>
                   </div>
-                </div>:null}
+                ) : null}
               </>
             </div>
           </div>

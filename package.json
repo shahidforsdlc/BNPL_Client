@@ -1,6 +1,6 @@
 {
   "name": "bnpl-wipeon",
-  "version": "1.1.4",
+  "version": "1.1.6",
   "description": "",
   "main": "dist/index.js",
   "scripts": {
@@ -26,10 +26,14 @@
   },
   "dependencies": {
     "@heroicons/react": "^2.0.18",
-    "bnpl-wipeon": "^1.1.4",
+    "autoprefixer": "^10.4.16",
+    "bnpl-wipeon": "^1.1.5",
     "country-state-city": "^3.2.1",
+    "html-webpack-plugin": "^5.5.4",
     "libphonenumber-js": "^1.10.51",
     "moment": "^2.29.4",
+    "postcss": "^8.4.32",
+    "postcss-loader": "^7.3.3",
     "react": "^18.2.0",
     "react-datepicker": "^4.24.0",
     "react-dom": "^18.2.0",
@@ -41,7 +45,8 @@
     "react-toastify": "^9.1.3",
     "web-vitals": "^3.5.0",
     "webpack": "^5.89.0",
-    "webpack-cli": "^5.1.4"
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^4.15.1"
   },
   "eslintConfig": {
     "extends": [
