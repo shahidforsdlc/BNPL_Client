@@ -1,7 +1,7 @@
 import React from "react";
 import { FiCheck } from "react-icons/fi";
 const Stepper = (props) => {
-  const steps = ["Select Tenure", "Check Eligibility", "Payment"];
+  const steps = [ "Check Eligibility","Select Tenure", "Payment"];
 
   return (
     <div className="flex sm:flex-row flex-col items-center justify-center w-full m-1">
